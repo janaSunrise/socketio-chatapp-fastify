@@ -14,15 +14,40 @@ fastify.register(require('point-of-view'), {
     }
 })
 
-// Run the server
-const start = async () => {
-    try {
-        await fastify.listen(port, host);
-    } catch (err) {
-        fastify.log.error(err);
-        process.exit(1);
-    }
-}
+// Routing
+fastify.get('/', function (req, res) {
+    return res.view(`${template_prefix}/index.ejs`);
+})
 
-// Start the server
-start();
+io.on('connection', (socket) => {
+    io.emit('noOfConnections', Object.keys(io.sockets.connected).length)
+
+
+    socket.on('disconnect', () => {
+        console.log('disconnected')
+        io.emit('noOfConnections', Object.keys(io.sockets.connected).length)
+    })
+
+    socket.on('chat-message', (msg) => {
+        socket.broadcast.emit('chat-message', msg)
+    })
+    socket.on('joined', (name) => {
+        socket.broadcast.emit('joined', name)
+    })
+    socket.on('leaved', (name) => {
+        socket.broadcast.emit('leaved', name)
+    })
+
+    socket.on('typing', (data) => {
+        socket.broadcast.emit('typing', data)
+    })
+    socket.on('stoptyping', () => {
+        socket.broadcast.emit('stoptyping')
+    })
+})
+
+
+// Run the server
+http.listen(port, host, () => {
+    console.log(`Proxy Server running at http://${hostname}:${port}/`);
+});
