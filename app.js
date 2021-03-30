@@ -16,7 +16,7 @@ fastify.register(require('point-of-view'), {
 
 // Routing
 fastify.get('/', function (req, res) {
-    return res.view(`${template_prefix}/index.ejs`);
+    return res.view(`${template_prefix}/index.html`);
 })
 
 io.on('connection', (socket) => {
@@ -49,5 +49,5 @@ io.on('connection', (socket) => {
 
 // Run the server
 http.listen(port, host, () => {
-    console.log(`Proxy Server running at http://${hostname}:${port}/`);
+    console.log(`Server running at http://${host}:${port}/`);
 });
