@@ -1,4 +1,6 @@
 const fastify = require('fastify')({ logger: true });
+let http = require('http').Server(fastify);
+let io = require('socket.io')(http);
 
 // App constants
 const host = process.env.HOST || "127.0.0.1";
