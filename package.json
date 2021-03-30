@@ -1,0 +1,23 @@
+{
+  "name": "socketio-chatapp-fastify",
+  "version": "1.0.0",
+  "description": "A simple chat application made using Fastify and Socket.IO",
+  "main": "app.js",
+  "scripts": {
+    "dev": "nodemon app",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "fastify",
+    "socketio",
+    "fastify-chatapp"
+  ],
+  "author": "Sunrit Jana",
+  "license": "GPL-3.0-or-later",
+  "dependencies": {
+    "ejs": "^3.1.6",
+    "fastify": "^3.14.0",
+    "nodemon": "^2.0.7",
+    "point-of-view": "^4.14.0"
+  }
+}
