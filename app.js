@@ -1,6 +1,5 @@
 const fastify = require('fastify')({ logger: true });
-let http = require('http').Server(fastify);
-let io = require('socket.io')(http);
+let io = require('socket.io')(fastify.server);
 
 // App constants
 const host = process.env.HOST || "127.0.0.1";
@@ -15,25 +14,20 @@ fastify.register(require('point-of-view'), {
 })
 
 // Routing
-fastify.get('/', function (req, res) {
+fastify.get('/', async (req, res) => {
     return res.view(`${template_prefix}/index.html`);
 })
 
 io.on('connection', (socket) => {
-    io.emit('noOfConnections', Object.keys(io.sockets.connected).length)
-
-
-    socket.on('disconnect', () => {
-        console.log('disconnected')
-        io.emit('noOfConnections', Object.keys(io.sockets.connected).length)
-    })
 
     socket.on('chat-message', (msg) => {
         socket.broadcast.emit('chat-message', msg)
     })
+
     socket.on('joined', (name) => {
         socket.broadcast.emit('joined', name)
     })
+
     socket.on('leaved', (name) => {
         socket.broadcast.emit('leaved', name)
     })
@@ -48,6 +42,6 @@ io.on('connection', (socket) => {
 
 
 // Run the server
-http.listen(port, host, () => {
+fastify.listen(port, host, () => {
     console.log(`Server running at http://${host}:${port}/`);
 });
