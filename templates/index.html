@@ -1,141 +1,183 @@
 <!DOCTYPE html>
 <html>
-
-<head>
+  <head>
     <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title>Socket.IO Chat</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.5.2/darkly/bootstrap.min.css" integrity="sha384-nNK9n28pDUDDgIiIqZ/MiyO3F4/9vsMtReZK39klb/MtkZI3/LtjSjlmyVPS3KdN" crossorigin="anonymous">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootswatch/4.5.2/darkly/bootstrap.min.css"
+      integrity="sha384-nNK9n28pDUDDgIiIqZ/MiyO3F4/9vsMtReZK39klb/MtkZI3/LtjSjlmyVPS3KdN"
+      crossorigin="anonymous"
+    />
+  </head>
 
-</head>
-
-<body>
+  <body>
     <div class="container" id="app">
-        <div class="col-md-4 col-lg-6 offset-lg-3 offset-md-4">
-            <div v-if="ready">
-                <h4 class="text-center">Logged as {{name}}</h4>
-                <p v-for="item in info">
-                    <small>{{item.name}} {{item.type}}</small>
-                </p>
-            </div>
-
-            <form @submit.prevent="setName" class="mt-4" v-else>
-                <div class="form-group row">
-                    <label class="text-center"><h3>Your name to enter the room</h3></label>
-                    <input type="text" class="form-control col-15" v-model="name" placeholder="Type Here">
-                    <input type="submit" value="Add" class="btn btn-sm btn-primary mb-3 p-2">
-                </div>
-            </form>
-
-            <div class="card" style="background-color: #7289DA;" v-if="ready" style="max-width: 40rem;">
-                <div class="card-header text-white" style="background-color: #7289DA;">
-                    Socket.IO ChatAPP
-                    <span class="float-right"> {{online.length}} Online</span>
-                </div>
-
-                <ul class="list-group list-group-flush text-right">
-
-                    <small v-if="typing" class="text-white">
-                        <i>{{typing}} is typing...</i>
-                    </small>
-
-                    <li class="list-group-item" style="background-color: #9FB1BC;" v-for="message in messages">
-                        <span :class="{'float-left':(message.type===1)}">
-                            {{message.message}}
-                            <small>| {{message.by}}</small>
-                        </span>
-                    </li>
-                </ul>
-
-                <div class="card-body">
-                    <form @submit.prevent="send">
-                        <div class="form-group">
-                            <input type="text" class="form-control" v-model="newmessage" placeholder="Type Here">
-                        </div>
-                    </form>
-                </div>
-
-            </div>
+      <div class="col-md-4 col-lg-6 offset-lg-3 offset-md-4">
+        <div v-if="ready">
+          <h4 class="text-center">Logged as {{name}}</h4>
+          <p v-for="item in info">
+            <small>{{item.name}} {{item.type}}</small>
+          </p>
         </div>
+
+        <form @submit.prevent="setName" class="mt-4" v-else>
+          <div class="form-group row">
+            <label class="text-center"
+              ><h3>Your name to enter the room</h3></label
+            >
+            <input
+              type="text"
+              class="form-control col-15"
+              v-model="name"
+              placeholder="Type Here"
+            />
+            <input
+              type="submit"
+              value="Add"
+              class="btn btn-sm btn-primary mb-3 p-2"
+            />
+          </div>
+        </form>
+
+        <div
+          class="card"
+          style="background-color: #7289da"
+          v-if="ready"
+          style="max-width: 40rem"
+        >
+          <div class="card-header text-white" style="background-color: #7289da">
+            Socket.IO ChatAPP
+            <span class="float-right"> {{online.length}} Online</span>
+          </div>
+
+          <ul class="list-group list-group-flush text-right">
+            <small v-if="typing" class="text-white">
+              <i>{{typing}} is typing...</i>
+            </small>
+
+            <li
+              class="list-group-item"
+              style="background-color: #9fb1bc"
+              v-for="message in messages"
+            >
+              <span :class="{'float-left':(message.type===1)}">
+                {{message.message}}
+                <small>| {{message.by}}</small>
+              </span>
+            </li>
+          </ul>
+
+          <div class="card-body">
+            <form @submit.prevent="send">
+              <div class="form-group">
+                <input
+                  type="text"
+                  class="form-control"
+                  v-model="newmessage"
+                  placeholder="Type Here"
+                />
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
     </div>
 
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+      crossorigin="anonymous"
+    ></script>
     <script src="/socket.io/socket.io.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
     <script>
-        var socket = io();
+      var socket = io();
 
-        let app = new Vue({
-            el: '#app',
-            data: {
-                newmessage: null,
-                messages: [],
-                typing: false,
-                online: [],
-                name: null,
-                ready: false,
-                info: [],
-                connectionCount: 0
-            },
-            methods: {
-                send() {
-                    socket.emit('chat-message', { message: this.newmessage, user: this.name })
-                    this.messages.push({ message: this.newmessage, type: 0, by: 'Me' })
-                    this.newmessage = null
-                },
-                isTyping() {
-                    socket.emit('typing', this.name)
-                },
-                setName() {
-                    socket.emit('joined', this.name)
-                    this.ready = true
-                }
-            },
-            mounted() {
-                window.onbeforeunload = () => {
-                    socket.emit('leaved', this.name)
-                }
-            },
-            watch: {
-                newmessage(value) {
-                    value ? socket.emit('typing', this.name) : socket.emit('stoptyping')
-                }
-            },
-            created() {
-                socket.on('chat-message', (data) => {
-                    this.messages.push({ message: data.message, type: 1, by: data.user })
-                    this.typing = false
-                })
+      let app = new Vue({
+        el: "#app",
+        data: {
+          newmessage: null,
+          messages: [],
+          typing: false,
+          online: [],
+          name: null,
+          ready: false,
+          info: [],
+          connectionCount: 0,
+        },
+        methods: {
+          send() {
+            socket.emit("chat-message", {
+              message: this.newmessage,
+              user: this.name,
+            });
+            this.messages.push({ message: this.newmessage, type: 0, by: "Me" });
+            this.newmessage = null;
+          },
+          isTyping() {
+            socket.emit("typing", this.name);
+          },
+          setName() {
+            socket.emit("joined", this.name);
+            this.ready = true;
+          },
+        },
+        mounted() {
+          window.onbeforeunload = () => {
+            socket.emit("leaved", this.name);
+          };
+        },
+        watch: {
+          newmessage(value) {
+            value
+              ? socket.emit("typing", this.name)
+              : socket.emit("stoptyping");
+          },
+        },
+        created() {
+          socket.on("chat-message", (data) => {
+            this.messages.push({
+              message: data.message,
+              type: 1,
+              by: data.user,
+            });
+            this.typing = false;
+          });
 
-                socket.on('typing', (data) => {
-                    console.log(data)
-                    this.typing = data
-                })
-                socket.on('stoptyping', () => {
-                    this.typing = false
-                })
+          socket.on("typing", (data) => {
+            console.log(data);
+            this.typing = data;
+          });
+          socket.on("stoptyping", () => {
+            this.typing = false;
+          });
 
-                socket.on('leaved', (name) => {
-                    this.online.splice(this.online.indexOf(name))
-                    this.info.push({ name: name, type: 'Leaved' })
-                    setTimeout(() => {
-                        this.info = []
-                    }, 5000);
-                })
+          socket.on("leaved", (name) => {
+            this.online.splice(this.online.indexOf(name));
+            this.info.push({ name: name, type: "Leaved" });
+            setTimeout(() => {
+              this.info = [];
+            }, 5000);
+          });
 
-                socket.on('joined', (name) => {
-                    this.online.push(name)
-                    this.info.push({ name: name, type: 'Joined' })
-                    setTimeout(() => {
-                        this.info = []
-                    }, 5000);
-                })
-            }
-        });
+          socket.on("joined", (name) => {
+            this.online.push(name);
+            this.info.push({ name: name, type: "Joined" });
+            setTimeout(() => {
+              this.info = [];
+            }, 5000);
+          });
+        },
+      });
     </script>
-</body>
-
+  </body>
 </html>
