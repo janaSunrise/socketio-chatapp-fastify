@@ -4,8 +4,7 @@
   "description": "A simple chat application made using Fastify and Socket.IO",
   "main": "app.js",
   "scripts": {
-    "dev": "nodemon app",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "nodemon app"
   },
   "keywords": [
     "fastify",
@@ -13,7 +12,7 @@
     "fastify-chatapp"
   ],
   "author": "Sunrit Jana",
-  "license": "GPL-3.0-or-later",
+  "license": "Apache-2.0",
   "dependencies": {
     "ejs": "^3.1.6",
     "fastify": "^3.14.0",

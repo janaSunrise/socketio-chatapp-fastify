@@ -15,7 +15,7 @@ And it'll install dependencies to get you started!
 Run the server:
 
 ```bash
-npm run serve
+npm run dev
 ```
 
 This runs the fastify server, and uses nodemon to update whenever the code is changed.
