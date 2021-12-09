@@ -27,14 +27,14 @@ io.on("connection", (socket) => {
     socket.broadcast.emit("joined", name);
   });
 
-  socket.on("leaved", (name) => {
-    socket.broadcast.emit("leaved", name);
+  socket.on("left", (name) => {
+    socket.broadcast.emit("left", name);
   });
 
   socket.on("typing", (data) => {
     socket.broadcast.emit("typing", data);
   });
-  
+
   socket.on("stoptyping", () => {
     socket.broadcast.emit("stoptyping");
   });

@@ -109,18 +109,30 @@
 
     <!-- Custom scripts -->
     <script>
-      // IO connection
-      var socket = io();
+      // Create the SocketIO object
+      let socket = io();
 
+      // Initialize the Vue app
       let app = new Vue({
         el: "#app",
         data: {
+          // New message
           newmessage: null,
+
+          // Message history
           messages: [],
-          typing: false,
-          online: [],
+
+          // User info
           name: null,
           ready: false,
+
+          // User typing
+          typing: false,
+
+          // Online users count
+          online: [],
+
+          // Other info
           info: [],
           connectionCount: 0,
         },
@@ -130,6 +142,7 @@
               message: this.newmessage,
               user: this.name,
             });
+
             this.messages.push({ message: this.newmessage, type: 0, by: "Me" });
             this.newmessage = null;
           },
@@ -141,11 +154,6 @@
             this.ready = true;
           },
         },
-        mounted() {
-          window.onbeforeunload = () => {
-            socket.emit("leaved", this.name);
-          };
-        },
         watch: {
           newmessage(value) {
             value
@@ -153,6 +161,15 @@
               : socket.emit("stoptyping");
           },
         },
+
+        // Component mount function
+        mounted() {
+          window.onbeforeunload = () => {
+            socket.emit("left", this.name);
+          };
+        },
+
+        // Created function
         created() {
           socket.on("chat-message", (data) => {
             this.messages.push({
@@ -160,9 +177,11 @@
               type: 1,
               by: data.user,
             });
+
             this.typing = false;
           });
 
+          // Typing handlers
           socket.on("typing", (data) => {
             console.log(data);
             this.typing = data;
@@ -172,17 +191,20 @@
             this.typing = false;
           });
 
-          socket.on("leaved", (name) => {
-            this.online.splice(this.online.indexOf(name));
-            this.info.push({ name: name, type: "Leaved" });
+          // Join and leave handlers
+          socket.on("joined", (name) => {
+            this.online.push(name);
+            this.info.push({ name: name, type: "joined" });
+
             setTimeout(() => {
               this.info = [];
             }, 5000);
           });
 
-          socket.on("joined", (name) => {
-            this.online.push(name);
-            this.info.push({ name: name, type: "Joined" });
+          socket.on("left", (name) => {
+            this.online.splice(this.online.indexOf(name));
+            this.info.push({ name: name, type: "left" });
+
             setTimeout(() => {
               this.info = [];
             }, 5000);
